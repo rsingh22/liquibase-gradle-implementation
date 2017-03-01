@@ -1,0 +1,42 @@
+buildscript {
+	repositories {
+    maven {
+      url "http://artifactory.server.name:9000/release"
+    }
+	}
+	}
+
+task wrapper(type: Wrapper){ gradleVersion = '2.3' }
+/****************************
+ *  Build an artifact
+ ****************************/
+group = 'com.test.abc.abcnew'
+
+apply plugin: 'base'
+apply plugin: 'distribution'
+
+
+distributions {
+	main {
+		baseName = 'abcnew-liquibase'
+		contents {
+			from fileTree(dir: '.', includes: ["src/main/**/*"])
+			from fileTree(dir: '.', includes: ["gradle/**/*"])
+			from fileTree(dir: '.', includes: ["config/*.*"])
+			from file("deploy.gradle")
+			from file("gradlew")
+			from file("gradlew.bat")
+		}
+	}
+}
+
+task {
+<need to write to make in zip>
+}
+
+/***************************************
+ *  Publish the artifact to artifactory
+ ***************************************/
+
+artifacts { archives distZip }
+

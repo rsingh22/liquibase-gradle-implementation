@@ -1,0 +1,41 @@
+buildscript {
+	repositories {
+    maven {
+      url "http://artifactory.server.name:9000/repo"
+	}
+	}
+	dependencies {
+		classpath ([
+		    "gradle.plugin.org.liquibase:liquibase-gradle-plugin:1.1.1"
+		  , "oracle:ojdbc6:11.1.0.6"
+		])
+	}
+}
+apply plugin: "java"
+apply plugin: "org.liquibase.gradle"
+/****************************
+ *  Run the Liquibase upgrade
+ * gradle 
+ ****************************/
+ext {
+    env = (System.properties.deployLayer) ? System.properties.deployLayer : 'local'
+	configDir = new File('config')
+	configFile = file("${configDir}/stackConfig.groovy")
+    config = new ConfigSlurper(env).parse(configFile.toURL())
+}
+
+dependencies {
+	runtime 'oracle:ojdbc6:11.1.0.6'
+}
+
+liquibase {
+  activities {
+    main {
+      changeLogFile 'src/main/xml/db.changelog-master.xml'
+      url project.ext.config.dbUrl
+      username project.ext.config.dbUsername
+      password project.ext.config.dbPassword
+	    }
+  }
+  
+}
