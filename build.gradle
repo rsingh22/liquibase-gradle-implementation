@@ -31,7 +31,7 @@ distributions {
 }
 
 task {
-<need to write to make in zip>
+<need to write a task to make zip/tar file>
 }
 
 /***************************************
